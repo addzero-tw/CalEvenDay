@@ -18,7 +18,9 @@ router.get('/QueryID:ID?', function(req, res, next) {
     buddha.QueryID(ID,handler);
 });
 router.get('/CountOff.html',function(req, res, next) {
-	res.sendFile('../html/CountOff.html');
+	//res.sendFile('../html/CountOff.html', {"root": __dirname});
+	//res.render(CountOff)
+	res.render('../html/CountOff.html');
 });
 function simpleResponseJsonAndCacheHandler(req, res, next) {
     return function(err, data) {
