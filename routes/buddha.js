@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var buddha = require('../datas/buddha');
+var buddha = require('../datas/Buddha');
 
 router.get('/', function(req, res, next) {
     res.json({ hello: 'buddha-api' });
