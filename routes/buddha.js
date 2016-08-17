@@ -21,7 +21,7 @@ router.get('/CountOff.html',function(req, res, next) {
 	res.render('../html/CountOff.html');
 });
 router.get('/CountOff.js',function(req, res, next) {
-	res.render('../Public/javascripts/CountOff.js');
+	res.render('../public/javascripts/CountOff.js');
 });
 function simpleResponseJsonAndCacheHandler(req, res, next) {
     return function(err, data) {
