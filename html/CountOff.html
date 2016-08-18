@@ -12,10 +12,18 @@
 <body>
     <a>每日佛號計數</a>
     <br/>
-    <a>編號</a><input id="IDTb"/>
+	<form class="ui-filterable">
+    <a>編號</a><input id="IDTb" type="text" />
+	</form>
+	<ul id="IDList" data-role="listview" data-filter="true" data-filter-reveal="true" data-input="#IDTb">
+	</ul>
     <br/>
+	<form class="ui-filterable">
     <a>姓名</a><input id="NamtTb" type="text" />
+	</form>
     <br />
+	<ul id="NameList" data-role="listview" data-filter="true" data-filter-reveal="true" data-input="#NamtTb">
+	</ul>
     <a>佛號計數</a><input id="CountTb" type="number"/>
     <br />
     <button type="submit">提交計數</button>
