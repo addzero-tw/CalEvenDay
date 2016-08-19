@@ -18,6 +18,7 @@ exports.QueryName = function(Name,cb) {
 			if(onevals[1].indexOf(Name) > -1) {
 				result.push({ID:onevals[0],Name:onevals[1],Note:onevals[2]});
 			}
+			if(result.length == 10)break;
 		}
 		cb(err, result);
 	});
@@ -37,6 +38,7 @@ exports.QueryID = function(ID,cb) {
 			if(onevals[0].indexOf(ID) == 0) {
 				result.push({ID:onevals[0],Name:onevals[1],Note:onevals[2]});
 			}
+			if(result.length == 10)break;
 		}
 		cb(err, result);
 	});
