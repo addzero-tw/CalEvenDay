@@ -17,6 +17,19 @@ router.get('/QueryID:ID?', function(req, res, next) {
 	//res.json({ hello: Name });
     buddha.QueryID(ID,handler);
 });
+router.get('/QueryID:ID?', function(req, res, next) {
+    var handler = simpleResponseJsonAndCacheHandler(req, res, next);
+	var ID = req.query.ID;
+	//res.json({ hello: Name });
+    buddha.QueryID(ID,handler);
+});
+router.get('/CommitCount:ID?:Count?',function(req,res,next) {
+	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
+	var ID = req.query.ID;
+	var Count = req.query.Count;
+	buddha.CommitCount(ID,Count,handler);
+	
+});
 router.get('/CountOff.html',function(req, res, next) {
 	res.render('../html/CountOff.html');
 });

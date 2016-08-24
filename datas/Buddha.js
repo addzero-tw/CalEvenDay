@@ -3,6 +3,7 @@ const fs = require('fs');
 require('should');
 
 var inputFile='./data/name_list.csv';
+var db = new sqlite3.Database('./data/demo.sqlite');
 
 exports.QueryName = function(Name,cb) {
     if (typeof cb !== 'function') {
@@ -43,4 +44,12 @@ exports.QueryID = function(ID,cb) {
 		cb(err, result);
 	});
 	fs.createReadStream(inputFile).pipe(parser);
+}
+exports.CommitCount = function(ID,Count,cb) {
+	if (typeof cb !== 'function') {
+		throw new Error('need a callback');
+	}
+	db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer ,Kind Integer, Date char(10), Count Integer,PRIMARY KEY (UserId, Kind,Date));");
+	
+	
 }
