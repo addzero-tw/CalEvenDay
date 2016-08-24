@@ -50,6 +50,8 @@ exports.CommitCount = function(ID,Count,cb) {
 		throw new Error('need a callback');
 	}
 	db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer ,Kind Integer, Date char(10), Count Integer,PRIMARY KEY (UserId, Kind,Date));");
+	db.run("INSERT OR IGNORE INTO BuddhaCount(UserId,Kind,Date,Count) Values(?,?,?,?)",ID,1,'2016-01-01',Count);
 	
 	
+	cb(err, {result:'success'});
 }
