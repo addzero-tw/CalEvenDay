@@ -1,9 +1,10 @@
 var parse = require('csv-parse');
 const fs = require('fs');
 require('should');
+var sqlite3 = require("sqlite3").verbose();
 
 var inputFile='./data/name_list.csv';
-var db = new sqlite3.Database('./data/demo.sqlite');
+
 
 exports.QueryName = function(Name,cb) {
     if (typeof cb !== 'function') {
@@ -49,9 +50,19 @@ exports.CommitCount = function(ID,Count,cb) {
 	if (typeof cb !== 'function') {
 		throw new Error('need a callback');
 	}
-	db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer ,Kind Integer, Date char(10), Count Integer,PRIMARY KEY (UserId, Kind,Date));");
-	db.run("INSERT OR IGNORE INTO BuddhaCount(UserId,Kind,Date,Count) Values(?,?,?,?)",ID,1,'2016-01-01',Count);
-	
-	
+	var file = "./data/demo.sqlite";
+	var exists = fs.existsSync(file);
+	if(!exists) {
+		console.log("Creating DB file.");
+		fs.openSync(file, "w");
+	}
+	var db = new sqlite3.Database('./data/demo.sqlite');
+	db.serialize(function() {
+		if(!exists) {
+			db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer ,Kind Integer, Date char(10), Count Integer,PRIMARY KEY (UserId, Kind,Date));");
+			db.run("INSERT OR IGNORE INTO BuddhaCount(UserId,Kind,Date,Count) Values(?,?,?,?)",ID,1,'2016-01-01',Count);
+			db.close();
+		}
+	})
 	cb(err, {result:'success'});
 }
