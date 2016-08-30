@@ -50,17 +50,26 @@ exports.CommitCount = function(ID,Count,cb) {
 	if (typeof cb !== 'function') {
 		throw new Error('need a callback');
 	}
-	var file = "./data/demo.sqlite";
+	var Now = new Date();
+	Now.setHours(Now.getHours() - 17);
+	var SqliteFileStr = Now.getFullYear().toString() + (Now.getMonth()+1).toString();
+	var DateStr = Now.getFullYear().toString()+"-"+(Now.getMonth()+1).toString()+"-"+Now.getDate();
+	
+	var file = "./data/"+SqliteFileStr+".sqlite";
 	var exists = fs.existsSync(file);
 	if(!exists) {
 		console.log("Creating DB file.");
 		fs.openSync(file, "w");
 	}
-	var db = new sqlite3.Database('./data/demo.sqlite');
+	var db = new sqlite3.Database(file);
 	db.serialize(function() {
 		if(!exists) {
 			db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer ,Kind Integer, Date char(10), Count Integer,PRIMARY KEY (UserId, Kind,Date));");
-			db.run("INSERT OR IGNORE INTO BuddhaCount(UserId,Kind,Date,Count) Values(?,?,?,?)",ID,1,'2016-01-01',Count);
+			db.run("INSERT OR IGNORE INTO BuddhaCount(UserId,Kind,Date,Count) Values(?,?,?,?)",ID,1,DateStr,Count);
+			db.get("SELECT value FROM counts", function(err, row){
+				//res.json({ "count" : row.value });
+			});
+			
 			db.close();
 		}
 	})
