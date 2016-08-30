@@ -72,6 +72,9 @@ function SelectItem() {
 	$('#NameList').hidden();
 	autocomplete = false;
 }
+function CommitCount() {
+	
+}
 
 function init() {
 	//alert("init");
@@ -79,6 +82,7 @@ function init() {
 	$('#NamtTb').keyup(SearchByName);
 	$('#IDList').hidden();
 	$('#NameList').hidden();
+	$('#CommitCountBtn').click(CommitCount);
 	autocomplete = true;
 }
 

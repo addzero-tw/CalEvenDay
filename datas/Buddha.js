@@ -66,9 +66,10 @@ exports.CommitCount = function(ID,Count,cb) {
 		if(!exists) {
 			db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer ,Kind Integer, Date char(10), Count Integer,PRIMARY KEY (UserId, Kind,Date));");
 			db.run("INSERT OR IGNORE INTO BuddhaCount(UserId,Kind,Date,Count) Values(?,?,?,?)",ID,1,DateStr,Count);
-			db.get("SELECT value FROM counts", function(err, row){
+			//db.get("SELECT Count FROM BuddhaCount where UserId = ? and Kind = ? and Date = ?",[ID,1,DateStr], function(err, row){
 				//res.json({ "count" : row.value });
-			});
+				
+			//});
 			
 			db.close();
 		}
