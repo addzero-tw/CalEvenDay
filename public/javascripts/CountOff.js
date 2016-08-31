@@ -28,7 +28,7 @@ function SearchByID() {
 		});
 		
 	}else {
-		$('#IDList').empty().hidden();
+		$('#IDList').empty().hide();
 	}
 }
 function SearchByName() {
@@ -60,19 +60,25 @@ function SearchByName() {
 		});
 		
 	}else {
-		$('#NameList').empty().hidden();
+		$('#NameList').empty().hide();
 	}
 }
 function SelectItem() {
 	var Id = $(this).attr('ValId');
 	var Name = $(this).attr('ValName');
 	var Note = $(this).attr('ValNote');
-	alert(Name);
-	$('#IDList').hidden();
-	$('#NameList').hidden();
+	//alert(Name);
+	$('#IDList').hide();
+	$('#NameList').hide();
 	autocomplete = false;
 }
 function CommitCount() {
+	var Id = $('#IDTb').val();
+	var Name = $('#NamtTb').val();
+	
+	
+	
+	
 	
 }
 
@@ -80,9 +86,11 @@ function init() {
 	//alert("init");
 	$('#IDTb').keyup(SearchByID);
 	$('#NamtTb').keyup(SearchByName);
-	$('#IDList').hidden();
-	$('#NameList').hidden();
+	
+	$('#IDList').hide();
+	$('#NameList').hide();
 	$('#CommitCountBtn').click(CommitCount);
+
 	autocomplete = true;
 }
 
