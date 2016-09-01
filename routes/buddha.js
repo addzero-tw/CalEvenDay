@@ -23,11 +23,15 @@ router.get('/QueryID:ID?', function(req, res, next) {
 	//res.json({ hello: Name });
     buddha.QueryID(ID,handler);
 });
-router.get('/CommitCount:ID?:Count?',function(req,res,next) {
+router.get('/CommitCount/:ID/:Name/:Count?',function(req,res,next) {
 	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
-	var ID = req.query.ID;
-	var Count = req.query.Count;
-	buddha.CommitCount(ID,Count,handler);
+	var ID = req.params.ID;
+	var Name = req.params.Name;
+	var Count = req.params.Count;
+	//console.log(ID);
+	//console.log(Name);
+	//console.log(Count);
+	buddha.CommitCount(ID,Name,Count,handler);
 	
 });
 router.get('/CountOff.html',function(req, res, next) {

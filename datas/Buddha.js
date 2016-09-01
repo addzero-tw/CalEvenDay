@@ -46,14 +46,16 @@ exports.QueryID = function(ID,cb) {
 	});
 	fs.createReadStream(inputFile).pipe(parser);
 }
-exports.CommitCount = function(ID,Count,cb) {
+exports.CommitCount = function(ID,Name,Count,cb) {
 	if (typeof cb !== 'function') {
 		throw new Error('need a callback');
 	}
 	var Now = new Date();
 	Now.setHours(Now.getHours() - 17);
-	var SqliteFileStr = Now.getFullYear().toString() + (Now.getMonth()+1).toString();
-	var DateStr = Now.getFullYear().toString()+"-"+(Now.getMonth()+1).toString()+"-"+Now.getDate();
+	var SqliteFileStr = Now.getFullYear().toString() + (Now.getMonth() <9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString());
+	var DateStr = Now.getFullYear().toString()
+			+"-"+(Now.getMonth() < 9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString())
+			+"-"+(Now.getDate() < 9 ? ('0'+(Now.getDate()+1)):(Now.getDate()+1).toString());
 	
 	var file = "./data/"+SqliteFileStr+".sqlite";
 	var exists = fs.existsSync(file);
