@@ -75,6 +75,32 @@ function SelectItem() {
 function CommitCount() {
 	var Id = $('#IDTb').val();
 	var Name = $('#NamtTb').val();
+	var Count = $('#CountTb').val();
+	
+	var AlertMsg = Array();
+	
+	if(Id == undefined && Name == undefined) {
+		AlertMsg.push('沒有輸入必要資訊');
+	}
+	if(Count == undefined) {
+		AlertMsg.push('沒有輸入次數');
+	}
+	if(AlertMsg.length() > 0) {
+		alert(AlertMsg.join('\n'));
+		
+		return;
+	}
+	$.ajax({
+		url:'./CommitCount?ID='+Id+'&Count='+Count
+		,type:'get'
+		,dataType:'json'
+		,success:function(Jdata) {
+		}
+		,error:function(){
+			
+		}
+	});
+
 	
 	
 	
