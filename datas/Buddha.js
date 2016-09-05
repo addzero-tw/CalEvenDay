@@ -1,16 +1,16 @@
-var parse = require('csv-parse');
+//var parse = require('csv-parse');
 const fs = require('fs');
 require('should');
 var sqlite3 = require("sqlite3").verbose();
-
-var inputFile='./data/name_list.csv';
+var UserListFile = './data/name_list.sqlite';
+//var inputFile='./data/name_list.csv';
 
 
 exports.QueryName = function(Name,cb) {
     if (typeof cb !== 'function') {
         throw new Error('need a callback');
     }
-	
+	/*
 	var parser = parse({delimiter: ','}, function (err, data) {
 		//console.log(Name);
 		var result = new Array();
@@ -25,12 +25,23 @@ exports.QueryName = function(Name,cb) {
 		cb(err, result);
 	});
 	fs.createReadStream(inputFile).pipe(parser);
+	*/
+	var db = new sqlite3.Database(UserListFile);
+	db.serialize(function() {
+		var result = new Array();
+		db.each("Select ID,Name,Note from UserList where Name like '"+Name+"%' limit 10"
+			, function(err, row){
+				result.push({ID:row[0],Name:row[1],Note:row[2]});
+			});
+		cb(err,result);
+		db.close();
+	});
 }
 exports.QueryID = function(ID,cb) {
     if (typeof cb !== 'function') {
         throw new Error('need a callback');
     }
-	
+	/*
 	var parser = parse({delimiter: ','}, function (err, data) {
 		//console.log(Name);
 		var result = new Array();
@@ -45,6 +56,17 @@ exports.QueryID = function(ID,cb) {
 		cb(err, result);
 	});
 	fs.createReadStream(inputFile).pipe(parser);
+	*/
+	var db = new sqlite3.Database(UserListFile);
+	db.serialize(function() {
+		var result = new Array();
+		db.each("Select ID,Name,Note from UserList where ID like '"+ID+"%' limit 10"
+			, function(err, row){
+				result.push({ID:row[0],Name:row[1],Note:row[2]});
+			});
+		cb(err,result);
+		db.close();
+	});
 }
 exports.CommitCount = function(ID,Name,Count,cb) {
 	if (typeof cb !== 'function') {
@@ -66,7 +88,7 @@ exports.CommitCount = function(ID,Name,Count,cb) {
 	var db = new sqlite3.Database(file);
 	db.serialize(function() {
 		if(!exists) {
-			db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer ,Kind Integer, Date char(10), Count Integer,PRIMARY KEY (UserId, Kind,Date));");
+			//db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer ,Kind Integer, Date char(10), Count Integer,PRIMARY KEY (UserId, Kind,Date));");
 			db.run("INSERT OR IGNORE INTO BuddhaCount(UserId,Kind,Date,Count) Values(?,?,?,?)",ID,1,DateStr,Count);
 			//db.get("SELECT Count FROM BuddhaCount where UserId = ? and Kind = ? and Date = ?",[ID,1,DateStr], function(err, row){
 				//res.json({ "count" : row.value });
@@ -77,4 +99,24 @@ exports.CommitCount = function(ID,Name,Count,cb) {
 		}
 	})
 	cb(err, {result:'success'});
+}
+function FindPeople(ID,Name) {
+	var db = new sqlite3.Database(UserListFile);
+	result = null;
+	db.serialize(function() {
+		if(ID == undefined) {
+			db.get("Select ID,Name,Note from UserList where Name = ? limit 1",Name
+				, function(err, row){
+					result = {ID:row[0],Name:row[1],Note:row[2]};
+				});
+		}else {
+			db.get("Select ID,Name,Note from UserList where ID = ? limit 1",Name
+				, function(err, row){
+					result = {ID:row[0],Name:row[1],Note:row[2]};
+				});
+		}
+		
+		db.close();
+		return result;
+	});
 }
