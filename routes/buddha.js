@@ -17,12 +17,6 @@ router.get('/QueryID:ID?', function(req, res, next) {
 	//res.json({ hello: Name });
     buddha.QueryID(ID,handler);
 });
-router.get('/QueryID:ID?', function(req, res, next) {
-    var handler = simpleResponseJsonAndCacheHandler(req, res, next);
-	var ID = req.query.ID;
-	//res.json({ hello: Name });
-    buddha.QueryID(ID,handler);
-});
 router.get('/CommitCount/:ID/:Name/:Count?',function(req,res,next) {
 	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
 	var ID = req.params.ID;
