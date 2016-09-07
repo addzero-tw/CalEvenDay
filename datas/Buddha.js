@@ -10,31 +10,19 @@ exports.QueryName = function(Name,cb) {
     if (typeof cb !== 'function') {
         throw new Error('need a callback');
     }
-	/*
-	var parser = parse({delimiter: ','}, function (err, data) {
-		//console.log(Name);
-		var result = new Array();
-		for(var i=1;i<data.length;i++){
-			var onevals = data[i];
-			//console.log(onevals[1]);
-			if(onevals[1].indexOf(Name) > -1) {
-				result.push({ID:onevals[0],Name:onevals[1],Note:onevals[2]});
-			}
-			if(result.length == 10)break;
-		}
-		cb(err, result);
-	});
-	fs.createReadStream(inputFile).pipe(parser);
-	*/
 	var db = new sqlite3.Database(UserListFile);
+	var result = new Array();
 	db.serialize(function() {
-		var result = new Array();
+		
 		db.each("Select ID,Name,Note from UserList where Name like '"+Name+"%' limit 10"
 			, function(err, row){
-				result.push({ID:row[0],Name:row[1],Note:row[2]});
-			});
-		cb(undefined,result);
-		db.close();
+				//console.log(row);
+				result.push({ID:row.ID,Name:row.Name,Note:row.Note});
+			}
+			,function() {
+				cb(undefined,result);
+				db.close();
+		});
 	});
 }
 exports.QueryID = function(ID,cb) {
@@ -42,16 +30,20 @@ exports.QueryID = function(ID,cb) {
         throw new Error('need a callback');
     }
 	var db = new sqlite3.Database(UserListFile);
+	var result = new Array();
 	db.serialize(function() {
-		var result = new Array();
 		db.each("Select ID,Name,Note from UserList where cast(ID as char(10)) like '"+ID+"%' limit 10"
 			, function(err, row){
-				console.log(row);
-				result.push({ID:row[0],Name:row[1],Note:row[2]});
+				//console.log(row);
+				result.push({ID:row.ID,Name:row.Name,Note:row.Note});
+			}
+			,function() {
+				cb(undefined,result);
+				db.close();
 			});
-		cb(undefined,result);
-		db.close();
+		
 	});
+	
 }
 exports.CommitCount = function(ID,Name,Count,cb) {
 	if (typeof cb !== 'function') {
@@ -61,18 +53,26 @@ exports.CommitCount = function(ID,Name,Count,cb) {
 	var InsertName = undefined;
 	var UserListDb = new sqlite3.Database(UserListFile);
 	UserListDb.serialize(function() {
-		var result = new Array();
 		UserListDb.each("Select ID,Name from UserList where ID = "+ID+" limit 1"
 			, function(err, row){
-				InsertID = row[0];
-				InsertName = row[1]
+				InsertID = row.ID;
+				InsertName = row.Name;
+			}
+			, function() {
+				UserListDb.close();
+				if(InsertID == undefined) {
+					console.log("Not Found Fail")
+					cb(undefined, {result:'Fail'});
+					return;
+				}
+				WriteCountToDb(InsertID,InsertName,Count,cb);
 			});
-		UserListDb.close();
+		
 	});
-	if(InsertID == undefined) {
-		cb(err, {result:'Fail'});
-		return;
-	}
+	
+	
+}
+function WriteCountToDb(ID,Name,Count,cb) {
 	var Now = new Date();
 	Now.setHours(Now.getHours() - 17);
 	var SqliteFileStr = Now.getFullYear().toString() + (Now.getMonth() <9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString());
@@ -96,10 +96,9 @@ exports.CommitCount = function(ID,Name,Count,cb) {
 				//res.json({ "count" : row.value });
 				
 			//});
-			db.run("Insert or ignore into BuddhaCount(UserId,Name,Kind,Date,Count) Values(?,?,?,?,?); ",InsertID,InsertName,1,DateStr,Count);
+			db.run("Insert or ignore into BuddhaCount(UserId,Name,Kind,Date,Count) Values(?,?,?,?,?); ",ID,Name,1,DateStr,Count);
 			cb(undefined, {result:'Success'});
 			db.close();
 		}
-	})
-	cb(err, {result:'Fail'});
+	});
 }
