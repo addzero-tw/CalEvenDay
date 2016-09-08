@@ -28,11 +28,18 @@ router.get('/CommitCount/:ID/:Name/:Count?',function(req,res,next) {
 	buddha.CommitCount(ID,Name,Count,handler);
 	
 });
+/*
 router.get('/CountOff.html',function(req, res, next) {
 	res.render('../html/CountOff.html');
 });
 router.get('/CountOff.js',function(req, res, next) {
 	res.render('../public/javascripts/CountOff.js');
+});
+router.get('/Page1.htm',function(req, res, next) {
+	res.render('../html/Page1.htm');
+});
+router.get('/Page1.png',function(req, res, next) {
+	res.render('../html/Page1.png');
 });
 function simpleResponseJsonAndCacheHandler(req, res, next) {
     return function(err, data) {
@@ -44,7 +51,7 @@ function simpleResponseJsonAndCacheHandler(req, res, next) {
             res.jsonCache(data, req.originalUrl);
         }
     };
-}
+}*/
 function responseErr(next, code, message) {
     if (typeof next !== 'function') {
         console.error('responseErr: missing `next` function');

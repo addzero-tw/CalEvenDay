@@ -29,7 +29,11 @@ app.use(cors());
 // app.set('view engine', 'jade');
 //app.set('views', __dirname + '/views');
 app.engine('html', require('ejs').renderFile);
+app.engine('htm', require('ejs').renderFile);
 app.engine('js', require('ejs').renderFile);
+app.engine('css', require('ejs').renderFile);
+app.engine('jpg', require('ejs').renderFile);
+app.engine('png', require('ejs').renderFile);
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -51,7 +55,8 @@ app.use('/', cacheMiddleware, routes);
 app.use('/users', users);
 
 app.use('/Buddha', cacheMiddleware, require('./routes/buddha'));
-
+//app.use(express.static('public'));
+app.use('/static', express.static('public'));
 // app.use(setCache)
 
 // catch 404 and forward to error handler
