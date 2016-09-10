@@ -3,7 +3,6 @@ const fs = require('fs');
 require('should');
 var sqlite3 = require("sqlite3").verbose();
 var UserListFile = './data/name_list.sqlite';
-//var inputFile='./data/name_list.csv';
 
 
 exports.QueryName = function(Name,cb) {
@@ -89,16 +88,65 @@ function WriteCountToDb(ID,Name,Count,cb) {
 	var db = new sqlite3.Database(file);
 	db.serialize(function() {
 		if(!exists) {
-			//db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer ,Kind Integer, Date char(10), Count Integer,PRIMARY KEY (UserId, Kind,Date));");
 			db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer,Name TEXT,Kind Integer,Date TEXT,Count Integer,PRIMARY KEY(UserId,Kind,Date));");
-			//db.run("INSERT OR IGNORE INTO BuddhaCount(UserId,Kind,Date,Count) Values(?,?,?,?)",ID,1,DateStr,Count);
-			//db.get("SELECT Count FROM BuddhaCount where UserId = ? and Kind = ? and Date = ?",[ID,1,DateStr], function(err, row){
-				//res.json({ "count" : row.value });
-				
-			//});
-			db.run("Insert or ignore into BuddhaCount(UserId,Name,Kind,Date,Count) Values(?,?,?,?,?); ",ID,Name,1,DateStr,Count);
-			cb(undefined, {result:'Success'});
-			db.close();
 		}
+		db.run("Insert or ignore into BuddhaCount(UserId,Name,Kind,Date,Count) Values(?,?,?,?,?); ",ID,Name,1,DateStr,Count);
+		cb(undefined, {result:'Success'});
+		db.close();
+	});
+}
+exports.YesterdayCountList = function(cb) {
+	var Now = new Date();
+	Now.setHours(Now.getHours() - 17);
+	var SqliteFileStr = Now.getFullYear().toString() + (Now.getMonth() <9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString());
+	var DateStr = Now.getFullYear().toString()
+			+"-"+(Now.getMonth() < 9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString())
+			+"-"+(Now.getDate() < 9 ? ('0'+(Now.getDate()+1)):(Now.getDate()+1).toString());
+	var file = "./data/"+SqliteFileStr+".sqlite";
+	var exists = fs.existsSync(file);
+	if(!exists) {
+		console.log("Creating DB file.");
+		fs.openSync(file, "w");
+	}
+	var db = new sqlite3.Database(file);
+	db.serialize(function() {
+		if(!exists) {
+			db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer,Name TEXT,Kind Integer,Date TEXT,Count Integer,PRIMARY KEY(UserId,Kind,Date));");
+		}
+		result = new Array();
+		db.each("select UserId,Name,Count from BuddhaCount where Date = ? and Kind = 1 order by UserId",DateStr,function(err,row){
+			result.push({UserId:row.UserId,Name:row.Name,Count:row.Count});
+		}
+		,function() {
+			cb(undefined, result);
+			db.close();
+		});
+		
+	});
+}
+exports.ThisCountList = function(cb) {
+	var Now = new Date();
+	Now.setHours(Now.getHours() - 17);
+	var SqliteFileStr = Now.getFullYear().toString() + (Now.getMonth() <9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString());
+	var file = "./data/"+SqliteFileStr+".sqlite";
+	var exists = fs.existsSync(file);
+	if(!exists) {
+		console.log("Creating DB file.");
+		fs.openSync(file, "w");
+	}
+	var db = new sqlite3.Database(file);
+	db.serialize(function() {
+		if(!exists) {
+			db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer,Name TEXT,Kind Integer,Date TEXT,Count Integer,PRIMARY KEY(UserId,Kind,Date));");
+		}
+		result = new Array();
+		db.each("select UserId,Name,SUM(Count) as Count from BuddhaCount where Kind = 1 group by UserId,Name order by UserId",DateStr,function(err,row){
+			result.push({UserId:row.UserId,Name:row.Name,Count:row.Count});
+		}
+		,function() {
+			cb(undefined, result);
+			db.close();
+		});
+		
 	});
 }

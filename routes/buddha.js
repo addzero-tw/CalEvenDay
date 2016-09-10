@@ -28,6 +28,14 @@ router.get('/CommitCount/:ID/:Name/:Count?',function(req,res,next) {
 	buddha.CommitCount(ID,Name,Count,handler);
 	
 });
+router.get('/YesterdayCountList',function(req,res,next) {
+	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
+	buddha.YesterdayCountList(handler);
+});
+router.get('/ThisMonthCountList',function(req,res,next){
+	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
+	buddha.ThisCountList(handler);
+});
 /*
 router.get('/CountOff.html',function(req, res, next) {
 	res.render('../html/CountOff.html');
