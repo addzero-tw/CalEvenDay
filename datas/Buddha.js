@@ -101,13 +101,14 @@ exports.YesterdayCountList = function(cb) {
 	var SqliteFileStr = Now.getFullYear().toString() + (Now.getMonth() <9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString());
 	var DateStr = Now.getFullYear().toString()
 			+"-"+(Now.getMonth() < 9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString())
-			+"-"+(Now.getDate() < 9 ? ('0'+(Now.getDate()+1)):(Now.getDate()+1).toString());
+			+"-"+(Now.getDate() < 9 ? ('0'+Now.getDate()):(Now.getDate()).toString());
 	var file = "./data/"+SqliteFileStr+".sqlite";
 	var exists = fs.existsSync(file);
 	if(!exists) {
 		console.log("Creating DB file.");
 		fs.openSync(file, "w");
 	}
+	console.log("select UserId,Name,Count from BuddhaCount where Date = '"+DateStr+"' and Kind = 1 order by UserId")
 	var db = new sqlite3.Database(file);
 	db.serialize(function() {
 		if(!exists) {
