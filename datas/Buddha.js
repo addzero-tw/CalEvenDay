@@ -150,3 +150,9 @@ exports.ThisCountList = function(cb) {
 		
 	});
 }
+exports.TodayStr = function(cb) {
+	var Now = new Date();
+	Now.setHours(Now.getHours() - 17);
+	cb(undefined, {Today:Now.getFullYear().toString()+'年'+(Now.getMonth() <9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString())+'月'
+		+(Now.getDate() < 9 ? ('0'+(Now.getDate()+1)):(Now.getDate()+1).toString())+'日'});
+}

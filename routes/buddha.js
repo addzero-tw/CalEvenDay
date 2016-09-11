@@ -28,6 +28,10 @@ router.get('/CommitCount/:ID/:Name/:Count?',function(req,res,next) {
 	buddha.CommitCount(ID,Name,Count,handler);
 	
 });
+router.get('/TodayStr',function(req,res,next) {
+	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
+	buddha.TodayStr(handler);
+});
 router.get('/YesterdayCountList',function(req,res,next) {
 	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
 	buddha.YesterdayCountList(handler);
@@ -48,7 +52,7 @@ router.get('/Page1.htm',function(req, res, next) {
 });
 router.get('/Page1.png',function(req, res, next) {
 	res.render('../html/Page1.png');
-});
+});*/
 function simpleResponseJsonAndCacheHandler(req, res, next) {
     return function(err, data) {
         if (err) {
@@ -59,7 +63,7 @@ function simpleResponseJsonAndCacheHandler(req, res, next) {
             res.jsonCache(data, req.originalUrl);
         }
     };
-}*/
+}
 function responseErr(next, code, message) {
     if (typeof next !== 'function') {
         console.error('responseErr: missing `next` function');
