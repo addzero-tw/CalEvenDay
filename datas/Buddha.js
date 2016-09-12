@@ -124,7 +124,7 @@ exports.YesterdayCountList = function(cb) {
 			//result.push({UserId:row.UserId,Name:row.Name,Count:row.Count});
 			
 			
-			result.push('<pre>'+row.UserId+'\t'+row.Name +(row.Name.length <= 2 ? '\t\t':'\t')+FixInteger(row.Count)+'</pre>');
+			result.push('<pre>'+row.UserId+'\t'+row.Name +(row.Name.length <= 2 ? '\t\t':'\t\t')+FixInteger(row.Count)+'</pre>');
 			People +=1;
 			SumCount += row.Count;
 		}
@@ -133,7 +133,7 @@ exports.YesterdayCountList = function(cb) {
 			result.push('<pre>念佛總數:\t'+FixInteger(SumCount)+'</pre>');
 			result.push('<pre>念佛人數:\t'+FixInteger(People)+'</pre>');
 			result.push('<pre>南無阿彌陀佛</pre>');
-			cb(undefined, result.join('<br>'));
+			cb(undefined, result.join(''));
 			db.close();
 		});
 		
@@ -161,7 +161,7 @@ exports.ThisCountList = function(cb) {
 		SumCount = 0;
 		db.each("select UserId,Name,SUM(Count) as Count from BuddhaCount where Kind = 1 group by UserId,Name order by UserId",DateStr,function(err,row){
 			//result.push({UserId:row.UserId,Name:row.Name,Count:row.Count});
-			result.push('<pre>'+row.UserId+'\t'+row.Name +(row.Name.length <= 2 ? '\t\t':'\t')+FixInteger(row.Count)+'</pre>');
+			result.push('<pre>'+row.UserId+'\t'+row.Name +(row.Name.length <= 2 ? '\t\t':'\t\t')+FixInteger(row.Count)+'</pre>');
 			People +=1;
 			SumCount += row.Count;
 		}
@@ -170,7 +170,7 @@ exports.ThisCountList = function(cb) {
 			result.push('<pre>念佛總數:\t'+FixInteger(SumCount)+'</pre>');
 			result.push('<pre>念佛人數:\t'+FixInteger(People)+'</pre>');
 			result.push('<pre>南無阿彌陀佛</pre>');
-			cb(undefined, result.join('<br>'));
+			cb(undefined, result.join(''));
 			db.close();
 		});
 		
