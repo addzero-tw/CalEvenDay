@@ -124,16 +124,16 @@ exports.YesterdayCountList = function(cb) {
 			//result.push({UserId:row.UserId,Name:row.Name,Count:row.Count});
 			
 			
-			result.push('<pre>'+row.UserId+'\t'+row.Name +(row.Name.length <= 2 ? '\t\t':'\t\t')+FixInteger(row.Count)+'</pre>');
+			result.push(row.UserId+'\t'+row.Name +(row.Name.length <= 2 ? '\t\t\t':'\t\t')+FixInteger(row.Count));
 			People +=1;
 			SumCount += row.Count;
 		}
 		,function() {
-			result.push('<pre>以上林口極樂虛空念佛堂'+YearStr+'年'+MonthStr+'月'+DayStr+'日</pre>');
-			result.push('<pre>念佛總數:\t'+FixInteger(SumCount)+'</pre>');
-			result.push('<pre>念佛人數:\t'+FixInteger(People)+'</pre>');
-			result.push('<pre>南無阿彌陀佛</pre>');
-			cb(undefined, result.join(''));
+			result.push('以上林口極樂虛空念佛堂'+YearStr+'年'+MonthStr+'月'+DayStr+'日');
+			result.push('念佛總數:\t'+FixInteger(SumCount));
+			result.push('念佛人數:\t'+FixInteger(People));
+			result.push('南無阿彌陀佛');
+			cb(undefined, result.join('<br>'));
 			db.close();
 		});
 		
@@ -161,16 +161,16 @@ exports.ThisCountList = function(cb) {
 		SumCount = 0;
 		db.each("select UserId,Name,SUM(Count) as Count from BuddhaCount where Kind = 1 group by UserId,Name order by UserId",DateStr,function(err,row){
 			//result.push({UserId:row.UserId,Name:row.Name,Count:row.Count});
-			result.push('<pre>'+row.UserId+'\t'+row.Name +(row.Name.length <= 2 ? '\t\t':'\t\t')+FixInteger(row.Count)+'</pre>');
+			result.push(row.UserId+'\t'+row.Name +(row.Name.length <= 2 ? '\t\t\t':'\t\t')+FixInteger(row.Count));
 			People +=1;
 			SumCount += row.Count;
 		}
 		,function() {
-			result.push('<pre>以上林口極樂虛空念佛堂'+YearStr+'年'+MonthStr+'月</pre>');
-			result.push('<pre>念佛總數:\t'+FixInteger(SumCount)+'</pre>');
-			result.push('<pre>念佛人數:\t'+FixInteger(People)+'</pre>');
-			result.push('<pre>南無阿彌陀佛</pre>');
-			cb(undefined, result.join(''));
+			result.push('以上林口極樂虛空念佛堂'+YearStr+'年'+MonthStr+'月');
+			result.push('念佛總數:\t'+FixInteger(SumCount));
+			result.push('念佛人數:\t'+FixInteger(People));
+			result.push('南無阿彌陀佛');
+			cb(undefined, result.join('<br>'));
 			db.close();
 		});
 		
