@@ -102,24 +102,38 @@ exports.YesterdayCountList = function(cb) {
 	var DateStr = Now.getFullYear().toString()
 			+"-"+(Now.getMonth() < 9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString())
 			+"-"+(Now.getDate() < 9 ? ('0'+Now.getDate()):(Now.getDate()).toString());
+	var YearStr = Now.getFullYear().toString();
+	var MonthStr = (Now.getMonth() < 9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString());
+	var DayStr = (Now.getDate() < 9 ? ('0'+Now.getDate()):(Now.getDate()).toString());
 	var file = "./data/"+SqliteFileStr+".sqlite";
 	var exists = fs.existsSync(file);
 	if(!exists) {
 		console.log("Creating DB file.");
 		fs.openSync(file, "w");
 	}
-	console.log("select UserId,Name,Count from BuddhaCount where Date = '"+DateStr+"' and Kind = 1 order by UserId")
+	//console.log("select UserId,Name,Count from BuddhaCount where Date = '"+DateStr+"' and Kind = 1 order by UserId")
 	var db = new sqlite3.Database(file);
 	db.serialize(function() {
 		if(!exists) {
 			db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer,Name TEXT,Kind Integer,Date TEXT,Count Integer,PRIMARY KEY(UserId,Kind,Date));");
 		}
 		result = new Array();
+		People = 0;
+		SumCount = 0;
 		db.each("select UserId,Name,Count from BuddhaCount where Date = ? and Kind = 1 order by UserId",DateStr,function(err,row){
-			result.push({UserId:row.UserId,Name:row.Name,Count:row.Count});
+			//result.push({UserId:row.UserId,Name:row.Name,Count:row.Count});
+			
+			
+			result.push(row.UserId+'\t'+row.Name +(row.Name.length <= 2 ? '\t\t':'\t')+FixInteger(row.Count));
+			People +=1;
+			SumCount += row.Count;
 		}
 		,function() {
-			cb(undefined, result);
+			result.push('以上林口極樂虛空念佛堂'+YearStr+'年'+MonthStr+'月'+DayStr+'日');
+			result.push('念佛總數:\t'+FixInteger(SumCount));
+			result.push('念佛人數:\t'+FixInteger(People));
+			result.push('南無阿彌陀佛');
+			cb(undefined, result.join('\n'));
 			db.close();
 		});
 		
@@ -128,6 +142,8 @@ exports.YesterdayCountList = function(cb) {
 exports.ThisCountList = function(cb) {
 	var Now = new Date();
 	Now.setHours(Now.getHours() - 17);
+	var YearStr = Now.getFullYear().toString();
+	var MonthStr = (Now.getMonth() < 9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString());
 	var SqliteFileStr = Now.getFullYear().toString() + (Now.getMonth() <9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString());
 	var file = "./data/"+SqliteFileStr+".sqlite";
 	var exists = fs.existsSync(file);
@@ -141,10 +157,19 @@ exports.ThisCountList = function(cb) {
 			db.run("CREATE TABLE IF NOT EXISTS BuddhaCount (UserId Integer,Name TEXT,Kind Integer,Date TEXT,Count Integer,PRIMARY KEY(UserId,Kind,Date));");
 		}
 		result = new Array();
+		People = 0;
+		SumCount = 0;
 		db.each("select UserId,Name,SUM(Count) as Count from BuddhaCount where Kind = 1 group by UserId,Name order by UserId",DateStr,function(err,row){
-			result.push({UserId:row.UserId,Name:row.Name,Count:row.Count});
+			//result.push({UserId:row.UserId,Name:row.Name,Count:row.Count});
+			result.push(row.UserId+'\t'+row.Name +(row.Name.length <= 2 ? '\t\t':'\t')+FixInteger(row.Count));
+			People +=1;
+			SumCount += row.Count;
 		}
 		,function() {
+			result.push('以上林口極樂虛空念佛堂'+YearStr+'年'+MonthStr+'月');
+			result.push('念佛總數:\t'+FixInteger(SumCount));
+			result.push('念佛人數:\t'+FixInteger(People));
+			result.push('南無阿彌陀佛');
 			cb(undefined, result);
 			db.close();
 		});
@@ -156,4 +181,15 @@ exports.TodayStr = function(cb) {
 	Now.setHours(Now.getHours() - 17);
 	cb(undefined, {Today:Now.getFullYear().toString()+'年'+(Now.getMonth() <9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString())+'月'
 		+(Now.getDate() < 9 ? ('0'+(Now.getDate()+1)):(Now.getDate()+1).toString())+'日'});
+}
+function FixInteger(val) {
+	if(val < 1000)
+		return val.toString();
+	var result = new Array();
+	while(val / 1000 > 0) {
+		//console.log(val);
+		result.splice(0,0,(val%1000).toString());
+		val = Math.floor( val / 1000);
+	}
+	return result.join(',');
 }

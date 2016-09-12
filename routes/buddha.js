@@ -33,11 +33,11 @@ router.get('/TodayStr',function(req,res,next) {
 	buddha.TodayStr(handler);
 });
 router.get('/YesterdayCountList',function(req,res,next) {
-	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
+	var handler = simpleResponseTxtAndCacheHandler(req, res, next);
 	buddha.YesterdayCountList(handler);
 });
 router.get('/ThisMonthCountList',function(req,res,next){
-	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
+	var handler = simpleResponseTxtAndCacheHandler(req, res, next);
 	buddha.ThisCountList(handler);
 });
 /*
@@ -61,6 +61,17 @@ function simpleResponseJsonAndCacheHandler(req, res, next) {
         }
         else {
             res.jsonCache(data, req.originalUrl);
+        }
+    };
+}
+function simpleResponseTxtAndCacheHandler(req, res, next) {
+    return function(err, data) {
+        if (err) {
+            console.log(err);
+            next(err);
+        }
+        else {
+            res.sendCache(data, req.originalUrl);
         }
     };
 }
