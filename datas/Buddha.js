@@ -133,7 +133,7 @@ exports.YesterdayCountList = function(cb) {
 			result.push('念佛總數:\t'+FixInteger(SumCount));
 			result.push('念佛人數:\t'+FixInteger(People));
 			result.push('南無阿彌陀佛');
-			cb(undefined, result.join('\n'));
+			cb(undefined, result.join('\r\n'));
 			db.close();
 		});
 		
@@ -170,7 +170,7 @@ exports.ThisCountList = function(cb) {
 			result.push('念佛總數:\t'+FixInteger(SumCount));
 			result.push('念佛人數:\t'+FixInteger(People));
 			result.push('南無阿彌陀佛');
-			cb(undefined, result);
+			cb(undefined, result.join('\r\n'));
 			db.close();
 		});
 		
