@@ -40,6 +40,22 @@ router.get('/ThisMonthCountList',function(req,res,next){
 	var handler = simpleResponseTxtAndCacheHandler(req, res, next);
 	buddha.ThisCountList(handler);
 });
+router.get('/UserList',function(req,res,next){
+	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
+	buddha.UserList(handler);
+});
+router.get('/AddUser/:ID/:Name/:Note',function(req,res,next){
+	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
+	var ID = req.params.ID;
+	var Name = req.params.Name;
+	var Note = req.params.Note;
+	buddha.AddUser(ID,Name,Note,handler);
+});
+router.get('/DelUser/:ID',function(req,res,next){
+	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
+	var ID = req.params.ID;
+	buddha.DelUser(ID,handler);
+});
 /*
 router.get('/CountOff.html',function(req, res, next) {
 	res.render('../html/CountOff.html');

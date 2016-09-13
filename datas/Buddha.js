@@ -72,6 +72,9 @@ exports.CommitCount = function(ID,Name,Count,cb) {
 	
 }
 function WriteCountToDb(ID,Name,Count,cb) {
+	if (typeof cb !== 'function') {
+		throw new Error('need a callback');
+	}
 	var Now = new Date();
 	Now.setHours(Now.getHours() - 17);
 	var SqliteFileStr = Now.getFullYear().toString() + (Now.getMonth() <9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString());
@@ -96,6 +99,9 @@ function WriteCountToDb(ID,Name,Count,cb) {
 	});
 }
 exports.YesterdayCountList = function(cb) {
+	if (typeof cb !== 'function') {
+		throw new Error('need a callback');
+	}
 	var Now = new Date();
 	Now.setHours(Now.getHours() - 17);
 	var SqliteFileStr = Now.getFullYear().toString() + (Now.getMonth() <9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString());
@@ -140,6 +146,9 @@ exports.YesterdayCountList = function(cb) {
 	});
 }
 exports.ThisCountList = function(cb) {
+	if (typeof cb !== 'function') {
+		throw new Error('need a callback');
+	}
 	var Now = new Date();
 	Now.setHours(Now.getHours() - 17);
 	var YearStr = Now.getFullYear().toString();
@@ -182,6 +191,67 @@ exports.TodayStr = function(cb) {
 	cb(undefined, {Today:Now.getFullYear().toString()+'年'+(Now.getMonth() <9 ? ('0'+(Now.getMonth()+1)):(Now.getMonth()+1).toString())+'月'
 		+(Now.getDate() < 9 ? ('0'+(Now.getDate()+1)):(Now.getDate()+1).toString())+'日'});
 }
+exports.UserList = function(cb) {
+	if (typeof cb !== 'function') {
+		throw new Error('need a callback');
+	}
+	var db = new sqlite3.Database(UserListFile);
+	db.serialize(function() {
+		var result = new Array();
+		db.each("Select ID,Name,Note from UserList"
+		,function(err,row){
+			result.push({ID:row.ID,Name:row.Name,Note:row.Note});
+		}
+		,function(){
+			cb(undefined, result);
+			db.close();
+		});
+	});
+}
+exports.AddUser = function(ID,Name,Note,cb) {
+	if (typeof cb !== 'function') {
+		throw new Error('need a callback');
+	}
+	var db = new sqlite3.Database(UserListFile);
+	db.serialize(function() {
+		var result = {result:'Fail',ID:undefined};
+		db.run("Insert or ignore into UserList(ID,Name,Note) values(?,?,?)",ID,Name,Note);
+		
+		db.each("Select ID,Name,Note from UserList where ID = ?",ID
+		,function(err,row){
+			if(row.ID == ID && row.Name == Name) {
+				result.result = 'Success';
+				result.ID = row.ID;
+			}
+		}
+		,function(){
+			cb(undefined, result);
+			db.close();
+		});
+	});
+}
+exports.DelUser = function(ID,cb) {
+	if (typeof cb !== 'function') {
+		throw new Error('need a callback');
+	}
+	var db = new sqlite3.Database(UserListFile);
+	db.serialize(function() {
+		var result = {result:'Success'};
+		db.run("Delete from UserList where ID = ?",ID);
+		
+		db.each("Select ID,Name,Note from UserList where ID = ?",ID
+		,function(err,row){
+			if(row.ID == ID) {
+				result.result = 'Fail';
+			}
+		}
+		,function(){
+			cb(undefined, result);
+			db.close();
+		});
+	});
+}
+
 function FixInteger(val) {
 	if(val < 1000)
 		return val.toString();
