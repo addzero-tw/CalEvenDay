@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>使用者名單顯示編輯</title>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
+	<link rel="stylesheet" href="stylesheets/UserList.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
+	<script src="javascripts/UserList.js"></script>
+	</head>
+<body bgcolor="#ffffff">
+</body>
+	<div data-role="page">  
+		<div data-role="header">
+			<table>
+				<tr><th>編號</th><th>姓名</th><th>註記</th><th>操作</th></tr>
+				<tr>
+					<td><input id="IdTb" /></td>
+					<td><input id="NameTb" /></td>
+					<td><input id="NoteTb" /></td>
+					<td>
+						<a href="#" class="ui-btn">搜尋</a>
+						<br>
+						<a href="#" class="ui-btn">新增</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="UserListTableDiv" class="ui-content">
+		</div>
+		<div id="PagesDiv" data-role="footer">
+			
+		</div>
+	</div>
+</html>
