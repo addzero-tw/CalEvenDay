@@ -8,7 +8,7 @@
 
 exports.jsonCache = function(express) {
 	var NodeCache = require("node-cache");
-	var apiCache = new NodeCache( { stdTTL: 36000, checkperiod: 36000 });
+	var apiCache = new NodeCache( { stdTTL: 60, checkperiod: 60 });
 	express.response.jsonCache = function(obj, key) {
 		express.response.json.call(this, obj);
 		if (obj && key) {
