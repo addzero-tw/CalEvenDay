@@ -1,38 +1,12 @@
 var UserList = new Array();
 var ShowUserList = new Array();
 var filter = undefined;
-var page = 0;
+var CustomerPage = 0;
 var MaxUserId = 0;
 
 function initTable() {
 	
-	var table = $('<table></table>');
-	var tbody = $('<tbody></tbody>');
-	
-	table.append(tbody);
-	tbody.append('<tr><th>編號</th><th>姓名</th><th>註記</th><th>刪除</th></tr>');
-	for(var i=0;i<10 && i < UserList.length;i++) {
-		var onerow = UserList[i];
-		var tr = $('<tr></tr>');
-		tr.attr('UserID',onerow.ID.toString());
-		var IdTd = $('<td></td>')
-			,NameTd = $('<td></td>')
-			,NoteTd = $('<td></td>')
-			,DelTd = $('<td></td>');
-		var DelBtn = $('<a href="#" class="ui-btn">刪除</a>');
-		IdTd.text(onerow.ID);
-		NameTd.text(onerow.Name);
-		NoteTd.text(onerow.Note == undefined ? '':onerow.Note);
-		DelBtn.attr('UserID',onerow.ID);
-		DelBtn.bind('tap',DelNewUserEvent);
-		DelTd.append(DelBtn);
-		tr.append(IdTd);
-		tr.append(NameTd);
-		tr.append(NoteTd);
-		tr.append(DelTd);
-		tbody.append(tr);
-	}
-	$('#UserListTableDiv').empty().append(table);
+	ReBuildTable();
 
 	var SumPage = Math.floor(UserList.length/10);
 	$('#PagesDiv').empty();
@@ -133,6 +107,58 @@ function DelNewUserEvent(event) {
 		}
 	});
 }
+function Search() {
+	var SearchVal = $('#SearchTb').val();
+	if(SearchVal.length > 0)
+		filter = true;
+	else {
+		filter = false;
+		ReBuildTable();
+		return;
+	}
+	ShowUserList.splice(0,ShowUserList.length);
+	for(var i=0;i<UserList.length;i++) {
+		if(UserList[i].ID.toString().indexOf(SearchVal) >= 0
+			|| UserList[i].Name.indexOf(SearchVal) >= 0
+			|| UserList[i].Note.indexOf(SearchVal) >= 0)
+		ShowUserList.push(UserList[i]);
+	}
+	alert(ShowUserList.length);
+	CustomerPage = 0;
+	ReBuildTable();
+}
+function ReBuildTable() {
+	var DataSource = filter ? ShowUserList:UserList;
+	var table = $('<table></table>');
+	var tbody = $('<tbody></tbody>');
+	
+	table.append(tbody);
+	tbody.append('<tr><th>編號</th><th>姓名</th><th>註記</th><th>刪除</th></tr>');
+	for(var i=CustomerPage * 10;i<(10 * (CustomerPage+1)) && i < DataSource.length;i++) {
+		var onerow = DataSource[i];
+		var tr = $('<tr></tr>');
+		tr.attr('UserID',onerow.ID.toString());
+		var IdTd = $('<td></td>')
+			,NameTd = $('<td></td>')
+			,NoteTd = $('<td></td>')
+			,DelTd = $('<td></td>');
+		var DelBtn = $('<a href="#" class="ui-btn">刪除</a>');
+		IdTd.text(onerow.ID);
+		NameTd.text(onerow.Name);
+		NoteTd.text(onerow.Note == undefined ? '':onerow.Note);
+		DelBtn.attr('UserID',onerow.ID);
+		DelBtn.bind('tap',DelNewUserEvent);
+		DelTd.append(DelBtn);
+		tr.append(IdTd);
+		tr.append(NameTd);
+		tr.append(NoteTd);
+		tr.append(DelTd);
+		tbody.append(tr);
+	}
+	$('#UserListTableDiv').empty().append(table);
+	
+}
+
 
 
 function init() {
@@ -155,6 +181,7 @@ function init() {
 			}
 		});
 	$('#AddNewUserBtn').bind('tap',AddNewUserEvent);
+	$('#SearchTb').change(Search);
 }
 
 
