@@ -5,21 +5,8 @@ var CustomerPage = 0;
 var MaxUserId = 0;
 
 function initTable() {
-	
 	ReBuildTable();
-
-	var SumPage = Math.floor(UserList.length/10);
-	$('#PagesDiv').empty();
-	for(var i = 0;i<10 && i < SumPage ;i++ ){
-		var PageA = $('<a href="#" class="ui-btn"></a>');
-		PageA.text((i+1).toString());
-		$('#PagesDiv').append(PageA);
-	}
-	if(SumPage > 10 ) {
-		var NextPageA = $('<a href="#" class="ui-btn">>>></a>');
-		
-		$('#PagesDiv').append(NextPageA);
-	}
+	ReBuildPage();
 }
 function AddNewUserEvent(event) {
 	var NewId =$('#IdTb').val();
@@ -123,10 +110,47 @@ function Search() {
 			|| UserList[i].Note.indexOf(SearchVal) >= 0)
 		ShowUserList.push(UserList[i]);
 	}
-	alert(ShowUserList.length);
+	//alert(ShowUserList.length);
 	CustomerPage = 0;
 	ReBuildTable();
+	ReBuildPage();
 }
+function ReBuildPage() {
+	var DataSource = filter ? ShowUserList:UserList;
+	var SumPage = Math.ceil(DataSource.length/10);
+	//alert(DataSource.length+","+SumPage);
+	var MinPage = CustomerPage - 5;
+	var MaxPage = CustomerPage + 4;
+	if(MinPage < 0) {
+		MaxPage -= MinPage;
+		MinPage = 0;
+	}
+	if(MaxPage > SumPage) {
+		MaxPage = SumPage;
+	}
+	$('#PagesDiv').empty();
+	if(MinPage > 0) {
+		var PrevPageA = $('<a href="#" class="ui-btn"><<<</a>');
+		PrevPageA.bind("tap",PageClick);
+		$('#PagesDiv').append(PrevPageA);
+	}
+	for(var i=MinPage;i<MaxPage;i++) {
+		var PageA = $('<a href="#" class="ui-btn">'+(i+1).toString()+'</a>');
+		if(i == CustomerPage) {
+			PageA.addClass('CurrentPage');
+		}
+		else {
+			PageA.bind("tap",PageClick);
+		}
+		$('#PagesDiv').append(PageA);
+	}
+	if(MaxPage < SumPage) {
+		var NextPageA = $('<a href="#" class="ui-btn">>>></a>');
+		NextPageA.bind("tap",PageClick);
+		$('#PagesDiv').append(NextPageA);
+	}
+}
+
 function ReBuildTable() {
 	var DataSource = filter ? ShowUserList:UserList;
 	var table = $('<table></table>');
@@ -158,7 +182,28 @@ function ReBuildTable() {
 	$('#UserListTableDiv').empty().append(table);
 	
 }
-
+function PageClick(event) {
+	var Page = $( event.target ).text();
+	//alert(Page);
+	if(Page == '>>>') {
+		CustomerPage += 10;
+		var DataSource = filter ? ShowUserList:UserList;
+		var SumPage = Math.ceil(DataSource.length/10);
+		if(CustomerPage > SumPage) {
+			CustomerPage = SumPage;
+		}
+	}
+	else if(Page == '<<<') {
+		CustomerPage -= 10;
+		if(CustomerPage < 0) {
+			CustomerPage = 0;
+		}
+	}
+	else {
+		CustomerPage = parseInt(Page)-1;
+	}
+	initTable();
+}
 
 
 function init() {
