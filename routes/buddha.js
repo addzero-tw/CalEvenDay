@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var buddha = require('../datas/Buddha');
+var BuddhaKey = require('../BuddhaCountKey.js');
 
 router.get('/', function(req, res, next) {
     res.json({ hello: 'buddha-api' });
@@ -55,6 +56,12 @@ router.get('/DelUser/:ID',function(req,res,next){
 	var handler = simpleResponseJsonAndCacheHandler(req, res, next);
 	var ID = req.params.ID;
 	buddha.DelUser(ID,handler);
+});
+router.get('/TodayBuddhaCountLink',function(req,res,next){
+	res.json({BuddhaCountLink:"http://"+req.headers.host+"/buddha/"+BuddhaKey.BuddhaCountKey});
+});
+router.get('/'+BuddhaKey.BuddhaCountKey,function(req,res,next){
+	res.render('../public/BuddhaCount.htm');
 });
 /*
 router.get('/CountOff.html',function(req, res, next) {

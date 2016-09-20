@@ -168,7 +168,7 @@ exports.ThisCountList = function(cb) {
 		result = new Array();
 		People = 0;
 		SumCount = 0;
-		db.each("select UserId,Name,SUM(Count) as Count from BuddhaCount where Kind = 1 group by UserId,Name order by UserId",DateStr,function(err,row){
+		db.each("select UserId,Name,SUM(Count) as Count from BuddhaCount where Kind = 1 group by UserId,Name order by UserId",function(err,row){
 			//result.push({UserId:row.UserId,Name:row.Name,Count:row.Count});
 			result.push(row.UserId+'\t'+row.Name +(row.Name.length <= 2 ? '\t\t\t':'\t\t')+FixInteger(row.Count));
 			People +=1;
