@@ -61,7 +61,7 @@ router.get('/TodayBuddhaCountLink',function(req,res,next){
 	res.json({BuddhaCountLink:"http://"+req.headers.host+"/buddha/"+BuddhaKey.BuddhaCountKey});
 });
 router.get('/'+BuddhaKey.BuddhaCountKey,function(req,res,next){
-	res.render('../public/BuddhaCount.htm');
+	res.render('../public/BuddhaCount2.htm');
 });
 /*
 router.get('/CountOff.html',function(req, res, next) {
