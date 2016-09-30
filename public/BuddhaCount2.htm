@@ -1,1 +1,33 @@
-<html><head>	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>	<title>每日念佛報數</title>	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">	<link rel="stylesheet" href="../static/stylesheets/BuddhaCount2.css">	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>	<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>	<script src="../static/javascripts/BuddhaCount2.js"></script></head><body>	<div data-role="page">  		<div class="ui-content">			<div id="L0926r1c1"><img src="../static/images/0926_r1_c1.png" width="1080" height="542" border="0"></div>			<div id="L0926r2c1"><img src="../static/images/0926_r2_c1.png" width="164" height="98" border="0"></div>			<div id="L0926r2c2"><img src="../static/images/0926_r2_c2.png" width="393" height="98" border="0"></div>			<div id="L0926r2c3"><img src="../static/images/0926_r2_c3.png" width="523" height="703" border="0"></div>			<div id="L0926r3c1"><img src="../static/images/0926_r3_c1.png" width="557" height="605" border="0"></div>			<div id="L0926r4c1"><img src="../static/images/0926_r4_c1.png" width="1080" height="195" border="0"></div>			<span id="DateDiv"><label id="DateP"></label></span>			<div id="NameDiv"><form class="ui-filterable"><input data-type="search" id="IDTb"/>				<ul id="IDList" data-role="listview" data-filter="true" data-filter-reveal="true" data-input="#IDTb">				</ul>			</form>			</div>			<div id="IDDiv"><form class="ui-filterable"><input data-type="search" id="NameTb"/>				<ul id="NameList" data-role="listview" data-filter="true" data-filter-reveal="true" data-input="#NameTb">				</ul>			</form></div>			<div id="CountDiv"><input data-type="number" id="CountTb"/></div>			<div id="CommitCountDiv">				<a id="CommitCountBtn" href="#" class="ui-btn">提交報數</a>			</div>		</div>	</div></body></html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>每日念佛報數</title>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
+	<link rel="stylesheet" href="../static/stylesheets/BuddhaCount2.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
+	<script src="../static/javascripts/BuddhaCount2.js"></script>
+	</head>
+<body bgcolor="#ffffff">
+</body>
+	<div data-role="page">  
+		<div data-role="header">
+			<span id="DateDiv"><label id="DateP"></label></span>
+		</div>
+		<div class="ui-content">
+			<span><label for="IDTb">編號:</label><form class="ui-filterable"><input data-type="search" id="IDTb"/></form></span>
+			<div>
+				<ul id="IDList" data-role="listview" data-filter="true" data-filter-reveal="true" data-input="#IDTb">
+				</ul>
+			</div>
+			<span><label for="NameTb">姓名:</label><form class="ui-filterable"><input data-type="search" id="NameTb"/></form></span>
+			<div>
+				<ul id="NameList" data-role="listview" data-filter="true" data-filter-reveal="true" data-input="#NameTb">
+				</ul>
+			</div>
+			<span><label for="CountTb">佛號計數:</label><input data-type="number" id="CountTb"/></span>
+			<span><a id="CommitCountBtn" href="#" class="ui-btn">提交計數</a></span>
+		</div>
+	</div>
+</html>
