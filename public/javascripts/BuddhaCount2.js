@@ -123,7 +123,7 @@ function getTodayStr() {
 		,type:'get'
 		,dataType:'json'
 		,success:function(Jdata) {
-			$('#DateP').text(Jdata.Today);
+			$('#DateP').text(Jdata.Today+' 每日報數');
 		}
 		,error:function(){
 			
